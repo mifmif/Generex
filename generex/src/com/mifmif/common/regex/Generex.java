@@ -3,6 +3,9 @@ package com.mifmif.common.regex;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mifmif.common.regex.util.Iterable;
+import com.mifmif.common.regex.util.Iterator;
+
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.State;
@@ -10,14 +13,14 @@ import dk.brics.automaton.Transition;
 
 /**
  * A Java utility class that help generating string values that match a given
- * regular expression.It generate all values that are matched by the regex, a
+ * regular expression.It generate all values that are matched by the Regex, a
  * random value, or you can generate only a specific string based on it's
  * lexicographical order .
  * 
  * @author y.mifrah
  *
  */
-public class Generex {
+public class Generex implements Iterable {
 
 	public Generex(String regex) {
 		regExp = new RegExp(regex);
@@ -41,13 +44,17 @@ public class Generex {
 	 *         in the sorted list of matched String.<br>
 	 *         <code>indexOrder</code> between 1 and <code>n</code> where
 	 *         <code>n</code> is the number of matched String.<br>
-	 *         If indexOrder >= n , return an empty string.
+	 *         If indexOrder >= n , return an empty string. if there is an
+	 *         infinite number of String that matches the given Regex, the
+	 *         method throws {@code StackOverflowError}
 	 */
 	public String getMatchedString(int indexOrder) {
-		buildTransactionNode();
+		buildRootNode();
 		if (indexOrder == 0)
 			indexOrder = 1;
-		return buildStringFromNode(rootNode, indexOrder);
+		String result = buildStringFromNode(rootNode, indexOrder);
+		result = result.substring(1, result.length() - 1);
+		return result;
 	}
 
 	private String buildStringFromNode(Node node, int indexOrder) {
@@ -83,7 +90,7 @@ public class Generex {
 	 *         given pattern.
 	 */
 	public String getFirstMatch() {
-		buildTransactionNode();
+		buildRootNode();
 		Node node = rootNode;
 		String result = "";
 		while (node.getNextNodes().size() > 0) {
@@ -104,7 +111,7 @@ public class Generex {
 	 * Prepare the rootNode and it's child nodes so that we can get
 	 * matchedString by index
 	 */
-	private void buildTransactionNode() {
+	private void buildRootNode() {
 		if (isTransactionNodeBuilt)
 			return;
 		isTransactionNodeBuilt = true;
@@ -115,26 +122,23 @@ public class Generex {
 		rootNode.updateNbrMatchedString();
 	}
 
-	public void printMatchedStrings() {
-		generate("", automaton.getInitialState(), true);
-	}
+	private int matchedStringCounter = 0;
 
-	private void generate(String strMatch, State state, boolean debug) {
+	private void generate(String strMatch, State state, int limit) {
+		if (matchedStringCounter == limit)
+			return;
+		++matchedStringCounter;
 		List<Transition> transitions = state.getSortedTransitions(true);
 		if (transitions.size() == 0) {
-			if (debug)
-				System.out.println(strMatch);
 			matchedStrings.add(strMatch);
 			return;
 		}
 		if (state.isAccept()) {
-			if (debug)
-				System.out.println(strMatch);
 			matchedStrings.add(strMatch);
 		}
 		for (Transition transition : transitions) {
 			for (char c = transition.getMin(); c <= transition.getMax(); ++c) {
-				generate(strMatch + c, transition.getDest(), debug);
+				generate(strMatch + c, transition.getDest(), limit);
 			}
 		}
 	}
@@ -149,6 +153,10 @@ public class Generex {
 	private List<Node> prepareTransactionNodes(State state) {
 
 		List<Node> transactionNodes = new ArrayList<Node>();
+		if (preparedTransactionNode == Integer.MAX_VALUE / 2)
+			return transactionNodes;
+		++preparedTransactionNode;
+
 		if (state.isAccept()) {
 			Node acceptedNode = new Node();
 			acceptedNode.setNbrChar(1);
@@ -168,9 +176,31 @@ public class Generex {
 		return transactionNodes;
 	}
 
+	private int preparedTransactionNode;
+
+	/**
+	 * Generate all Strings that matches the given Regex.
+	 * 
+	 * @return
+	 */
 	public List<String> getAllMatchedStrings() {
-		if (matchedStrings.size() == 0)
-			generate("", automaton.getInitialState(), false);
+		matchedStrings = new ArrayList<String>();
+		generate("", automaton.getInitialState(), Integer.MAX_VALUE);
+		return matchedStrings;
+
+	}
+
+	/**
+	 * Generate subList with a size of <code>limit</code> of Strings that
+	 * matches the given Regex. the Strings are ordered in lexicographical
+	 * order.
+	 * 
+	 * @param limit
+	 * @return
+	 */
+	public List<String> getMatchedStrings(int limit) {
+		matchedStrings = new ArrayList<String>();
+		generate("", automaton.getInitialState(), limit);
 		return matchedStrings;
 
 	}
@@ -228,4 +258,11 @@ public class Generex {
 		return prepareRandom(strMatch + randomChar, randomTransition.getDest(), minLength, maxLength);
 
 	}
+
+	@Override
+	public Iterator iterator() {
+		return new GenerexIterator(automaton.getInitialState());
+
+	}
+
 }

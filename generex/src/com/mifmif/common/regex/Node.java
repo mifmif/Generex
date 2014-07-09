@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Node class is used here to present a transition position in the Automata
- * state . Each Node has a nbrChar that present the number of possible
- * characters that could be used in the transaction, and a list of Node that
- * present the next transactions.
+ * Node class is used here to present a position in the Automata state . Each
+ * Node has a nbrChar that present the number of possible characters that could
+ * be used to go to the next possible position, and a list of Node that present
+ * the next positions.
  * 
  * @author y.mifrah
  *
