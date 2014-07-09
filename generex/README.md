@@ -7,10 +7,15 @@ A Java library for generating String that match  a given regular expression. it 
 -
 
 -Generate Random String that match the Regex.
+
 -Specify the min/max length  of the random generated String.
+
 -Generate a list of all Strings that matches the Regex, if the number of String that matches the Regex is greater then Integer.MAX_VALUE , the returned list will contains Strings up to the size limit of java.util.List which is Integer.MAX_VALUE (see iterator's feature in this case). 
+
 -generate a sublist of the Strings that matches the Regex based on the lexicographical order.
+
 -Given an index 'n' , generate the n'th element in lexicographical order of the list of Strings that matches the Regex.
+
 -Prepare an iterator that loop over all the Strings that matches the Regex.
  
 
