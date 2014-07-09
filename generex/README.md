@@ -1,6 +1,7 @@
 Generex
 =======
 A Java library for generating String that match  a given regular expression. it help you generate all Strings that matches a given Regex, random one , or one String from the matched String based on it's index.
+Generex is based on the library http://www.brics.dk/~amoeller/automaton/.
 
 
 **Features :**
@@ -16,7 +17,7 @@ A Java library for generating String that match  a given regular expression. it 
 
 -Given an index 'n' , generate the n'th element in lexicographical order of the list of Strings that matches the Regex.
 
--Prepare an iterator that loop over all the Strings that matches the Regex.
+-Prepare an iterator that loop over all the Strings that matches the Regex. even if the set of String that matches the given Regex is infinite.
  
 
 **How to use it :**
