@@ -25,12 +25,9 @@ import java.util.List;
  */
 public class Main {
     public static void main(String[] args) {
-        String raw = "user@server[0-8][0-8]env.sub.domain.sufix";
+        String raw = "user@server[0-2][0-2]env.sub.domain.sufix";
         String parse = parseRawInput(raw);
         Generex generex = new Generex(parse);
-        
-        generex.matchedStringsSize();
-
 
         // Generate all String that matches the given Regex.
         List<String> matchedStrs = generex.getAllMatchedStrings();
@@ -43,8 +40,9 @@ public class Main {
 
     /**
      * Parses the raw input.
-     *
-     * @param raw the raw
+     * 
+     * @param raw
+     *            the raw
      * @return the string
      */
     private static String parseRawInput(String raw) {
