@@ -29,6 +29,10 @@ Generex is based on the library http://www.brics.dk/~amoeller/automaton/.
 
 		Generex generex = new Generex("[0-3]([a-c]|[e-g]{1,2})");
 
+		// Generate random String
+		String randomStr = generex.random();
+		System.out.println(randomStr);// a random value from the previous String list
+
 		// generate the second String in lexicographical order that match the given Regex.
 		String secondString = generex.getMatchedString(2);
 		System.out.println(secondString);// it print '0b'
@@ -44,10 +48,6 @@ Generex is based on the library http://www.brics.dk/~amoeller/automaton/.
 		// it print 0a 0b 0c 0e 0ee 0e 0e 0f 0fe 0f 0f 0g 0ge 0g 0g 1a 1b 1c 1e
 		// 1ee 1e 1e 1f 1fe 1f 1f 1g 1ge 1g 1g 2a 2b 2c 2e 2ee 2e 2e 2f 2fe 2f 2f 2g
 		// 2ge 2g 2g 3a 3b 3c 3e 3ee 3e 3e 3f 3fe 3f 3f 3g 3ge 3g 3g 1ee
-
-		// Generate random String
-		String randomStr = generex.random();
-		System.out.println(randomStr);// a random value from the previous String list
 		
 ```
 
