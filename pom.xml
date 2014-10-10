@@ -33,9 +33,9 @@
 		<maven.pmd.excludes>**/generated-sources/**</maven.pmd.excludes>
 	</properties>
 	<scm>
-		<connection>scm:git:git@github.com:mkolisnyk/Muto.git</connection>
-		<developerConnection>scm:git:git@github.com:mkolisnyk/Muto.git</developerConnection>
-		<url>https://github.com/mkolisnyk/Muto.git</url>
+		<connection>scm:git:git@github.com:mkolisnyk/Generex.git</connection>
+		<developerConnection>scm:git:git@github.com:mkolisnyk/Generex.git</developerConnection>
+		<url>https://github.com/mkolisnyk/Generex.git</url>
 	</scm>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
