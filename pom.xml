@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.mkolisnyk</groupId>
 	<artifactId>generex</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>Generex</name>
 	<url>https://github.com/mkolisnyk/Generex/tree/master</url>
 	<description>Generex Library for Strings generation based on RegExp</description>
