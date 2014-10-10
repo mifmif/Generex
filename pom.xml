@@ -3,10 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.mkolisnyk</groupId>
 	<artifactId>generex</artifactId>
-	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Generex</name>
-
+	<url>https://github.com/mkolisnyk/Generex/tree/master</url>
+	<description>Generex Library for Strings generation based on RegExp</description>
+	<packaging>jar</packaging>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -37,6 +38,16 @@
 		<developerConnection>scm:git:git@github.com:mkolisnyk/Generex.git</developerConnection>
 		<url>https://github.com/mkolisnyk/Generex.git</url>
 	</scm>
+	<ciManagement>
+		<url>https://travis-ci.org/mkolisnyk/Generex/builds</url>
+		<system>Travis</system>
+		<notifiers>
+			<notifier>
+				<address>kolesnik.nickolay@gmail.com</address>
+				<type>mail</type>
+			</notifier>
+		</notifiers>
+	</ciManagement>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
