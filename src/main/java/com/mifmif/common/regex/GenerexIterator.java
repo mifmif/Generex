@@ -40,12 +40,10 @@ public class GenerexIterator implements Iterator {
 
 	}
 
-	@Override
 	public boolean hasNext() {
 		return !transitionsPath.isEmpty();
 	}
 
-	@Override
 	public String next() {
 		while (!transitionsPath.isEmpty()) {
 			TransitionLevel currentLevel = transitionsPath.peek();

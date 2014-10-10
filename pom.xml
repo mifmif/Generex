@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.mkolisnyk</groupId>
+  <artifactId>generex</artifactId>
+  <packaging>jar</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Generex</name>
+  
+  <licenses>
+	<license>
+		<name>The Apache Software License, Version 2.0</name>
+		<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		<distribution>repo</distribution>
+	</license>
+  </licenses>
+  <developers>
+	<developer>
+		<id>mkolisnyk</id>
+		<name>mkolisnyk</name>
+		<email>kolesnik.nickolay@gmail.com</email>
+	</developer>
+  </developers>
+
+  <parent>
+	<groupId>org.sonatype.oss</groupId>
+	<artifactId>oss-parent</artifactId>
+	<version>7</version>
+  </parent>
+
+  <properties>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<maven.pmd.excludes>**/generated-sources/**</maven.pmd.excludes>
+  </properties>
+  <scm>
+	<connection>scm:git:git@github.com:mkolisnyk/Muto.git</connection>
+	<developerConnection>scm:git:git@github.com:mkolisnyk/Muto.git</developerConnection>
+	<url>https://github.com/mkolisnyk/Muto.git</url>
+  </scm>
+  <dependencies>
+    <dependency>
+	  <groupId>dk.brics.automaton</groupId>
+	  <artifactId>automaton</artifactId>
+	  <version>1.11-8</version>
+    </dependency>
+  </dependencies>
+</project>

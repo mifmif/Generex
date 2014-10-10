@@ -277,7 +277,6 @@ public class Generex implements Iterable {
 
 	}
 
-	@Override
 	public Iterator iterator() {
 		return new GenerexIterator(automaton.getInitialState());
 
