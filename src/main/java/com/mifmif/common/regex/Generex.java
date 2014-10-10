@@ -20,6 +20,7 @@ package com.mifmif.common.regex;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.mifmif.common.regex.util.Iterable;
 import com.mifmif.common.regex.util.Iterator;
@@ -84,7 +85,7 @@ public class Generex implements Iterable {
 			if (passedStringNbr >= indexOrder) {
 				passedStringNbr -= step;
 				indexOrder -= passedStringNbr;
-				result += usedChar;
+				result = result.concat("" + usedChar);
 				break;
 			}
 		}
@@ -96,7 +97,7 @@ public class Generex implements Iterable {
 			if (passedStringNbrInChildNode >= indexOrder) {
 				passedStringNbrInChildNode -= childN.getNbrMatchedString();
 				indexOrder -= passedStringNbrInChildNode;
-				result += buildStringFromNode(childN, indexOrder);
+				result = result.concat(buildStringFromNode(childN, indexOrder));
 				break;
 			}
 		}
@@ -112,7 +113,7 @@ public class Generex implements Iterable {
 		Node node = rootNode;
 		String result = "";
 		while (node.getNextNodes().size() > 0) {
-			result += node.getMinChar();
+			result = result.concat("" + node.getMinChar());
 			node = node.getNextNodes().get(0);
 		}
 		return result;
@@ -262,17 +263,19 @@ public class Generex implements Iterable {
 		List<Transition> transitions = state.getSortedTransitions(false);
 
 		if (state.isAccept()) {
-			if (strMatch.length() == maxLength)
+			if (strMatch.length() == maxLength) {
 				return strMatch;
-			if (Math.random() > 0.7)
-				if (strMatch.length() >= minLength)
-					return strMatch;
+			}
+			if (Math.random() > 0.7 && strMatch.length() >= minLength) {
+				return strMatch;
+			}
 		}
 		if (transitions.size() == 0) {
 			return strMatch;
 		}
-		Transition randomTransition = transitions.get((int) (transitions.size() * Math.random()));
-		char randomChar = (char) ((int) (Math.random() * (randomTransition.getMax() - randomTransition.getMin())) + randomTransition.getMin());
+		Random random = new Random();
+		Transition randomTransition = transitions.get(random.nextInt(transitions.size()));
+		char randomChar = (char) (random.nextInt(randomTransition.getMax() - randomTransition.getMin()) + randomTransition.getMin());
 		return prepareRandom(strMatch + randomChar, randomTransition.getDest(), minLength, maxLength);
 
 	}

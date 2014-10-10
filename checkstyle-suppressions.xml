@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <suppress checks="DesignForExtensionCheck"
+              files="MutationStrategy.java"
+              lines="98-100"/>
+    <suppress checks="MagicNumberCheck"
+              files="JavadocStyleCheck.java"
+              lines="221"/>
+    <suppress checks="JavadocTypeCheck"
+              files="MavenMutoReporter.java"
+              lines="1-120"/>
+</suppressions>

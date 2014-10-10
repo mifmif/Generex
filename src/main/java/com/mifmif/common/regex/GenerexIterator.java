@@ -51,14 +51,15 @@ public class GenerexIterator implements Iterator {
 			if (!state.isAccept()) {
 				addNextTransitionLevel(currentLevel);
 				continue;
+			} else {
+    			currentValue = "";
+    			for (int i = 0; i < transitionsPath.size() - 1; ++i) {
+    				TransitionLevel transitionLevel = transitionsPath.get(i);
+    				currentValue += transitionLevel.getCurrentChar();
+    			}
+    			jumpToNextPath();
+    			break;
 			}
-			currentValue = "";
-			for (int i = 0; i < transitionsPath.size() - 1; ++i) {
-				TransitionLevel transitionLevel = transitionsPath.get(i);
-				currentValue += transitionLevel.getCurrentChar();
-			}
-			jumpToNextPath();
-			break;
 		}
 		return currentValue;
 	}
