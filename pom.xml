@@ -4,7 +4,7 @@
 	<artifactId>generex</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<name>Generex</name>
-	<url>https://github.com/mkolisnyk/Generex/tree/master</url>
+	<url>https://github.com/mifmif/Generex/tree/master</url>
 	<description>Generex Library for Strings generation based on RegExp</description>
 	<packaging>jar</packaging>
 	<licenses>
@@ -15,6 +15,11 @@
 		</license>
 	</licenses>
 	<developers>
+		<developer>
+			<id>mifmif</id>
+			<name>MIFRAH Youssef</name>
+			<email>mifmif.com@gmail.com</email>
+		</developer>
 		<developer>
 			<id>mkolisnyk</id>
 			<name>mkolisnyk</name>
@@ -33,14 +38,18 @@
 		<maven.pmd.excludes>**/generated-sources/**</maven.pmd.excludes>
 	</properties>
 	<scm>
-		<connection>scm:git:git@github.com:mkolisnyk/Generex.git</connection>
-		<developerConnection>scm:git:git@github.com:mkolisnyk/Generex.git</developerConnection>
-		<url>https://github.com/mkolisnyk/Generex.git</url>
+		<connection>scm:git:git@github.com:mifmif/Generex.git</connection>
+		<developerConnection>scm:git:git@github.com:mifmif/Generex.git</developerConnection>
+		<url>https://github.com/mifmif/Generex.git</url>
 	</scm>
 	<ciManagement>
-		<url>https://travis-ci.org/mkolisnyk/Generex/builds</url>
+		<url>https://travis-ci.org/mifmif/Generex/builds</url>
 		<system>Travis</system>
 		<notifiers>
+			<notifier>
+				<address>mifmif.com@gmail.com</address>
+				<type>mail</type>
+			</notifier>
 			<notifier>
 				<address>kolesnik.nickolay@gmail.com</address>
 				<type>mail</type>
