@@ -22,7 +22,6 @@ package com.mifmif.common.regex.util;
  *
  */
 public interface Iterator {
-	public boolean hasNext();
-
-	public String next();
+	boolean hasNext();
+	String next();
 }

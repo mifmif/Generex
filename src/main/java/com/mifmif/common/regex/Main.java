@@ -17,7 +17,7 @@
  */
 package com.mifmif.common.regex;
 
-import java.util.List;
+//import java.util.List;
 
 import com.mifmif.common.regex.util.Iterator;
 
@@ -35,7 +35,7 @@ public class Main {
 		System.out.println(secondString);// it print '0b'
 
 		// Generate all String that matches the given Regex.
-		List<String> matchedStrs = generex.getAllMatchedStrings();
+		//List<String> matchedStrs = generex.getAllMatchedStrings();
 
 		// Using Generex iterator
 		Iterator iterator = generex.iterator();
