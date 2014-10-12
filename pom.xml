@@ -38,12 +38,12 @@
 		<maven.pmd.excludes>**/generated-sources/**</maven.pmd.excludes>
 	</properties>
 	<scm>
-		<connection>scm:git:git@github.com:mifmif/Generex.git</connection>
-		<developerConnection>scm:git:git@github.com:mifmif/Generex.git</developerConnection>
-		<url>https://github.com/mifmif/Generex.git</url>
+		<connection>scm:git:git@github.com:mkolisnyk/Generex.git</connection>
+		<developerConnection>scm:git:git@github.com:mkolisnyk/Generex.git</developerConnection>
+		<url>https://github.com/mkolisnyk/Generex.git</url>
 	</scm>
 	<ciManagement>
-		<url>https://travis-ci.org/mifmif/Generex/builds</url>
+		<url>https://travis-ci.org/mkolisnyk/Generex/builds</url>
 		<system>Travis</system>
 		<notifiers>
 			<notifier>
@@ -329,6 +329,12 @@
 			<groupId>dk.brics.automaton</groupId>
 			<artifactId>automaton</artifactId>
 			<version>1.11-8</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

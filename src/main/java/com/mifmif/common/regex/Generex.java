@@ -19,7 +19,9 @@
 package com.mifmif.common.regex;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.mifmif.common.regex.util.Iterable;
@@ -41,7 +43,23 @@ import dk.brics.automaton.Transition;
  */
 public class Generex implements Iterable {
 
+    private Map<String, String> predefinedCharacterClasses = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+            put("\\\\d","[0-9]");
+            put("\\\\D","[^0-9]");
+            put("\\\\s","[ \t\n\f\r]");
+            put("\\\\S","[^ \t\n\f\r]");
+            put("\\\\w","[a-zA-Z_0-9]");
+            put("\\\\W","[^a-zA-Z_0-9]");
+        }
+    };
+    
 	public Generex(String regex) {
+	    for (String key : predefinedCharacterClasses.keySet()) {
+	        regex = regex.replaceAll(key, predefinedCharacterClasses.get(key));
+	    }
 		regExp = new RegExp(regex);
 		automaton = regExp.toAutomaton();
 	}
@@ -275,7 +293,12 @@ public class Generex implements Iterable {
 		}
 		Random random = new Random();
 		Transition randomTransition = transitions.get(random.nextInt(transitions.size()));
-		char randomChar = (char) (random.nextInt(randomTransition.getMax() - randomTransition.getMin()) + randomTransition.getMin());
+		int diff = randomTransition.getMax() - randomTransition.getMin();
+		int randomOffset = diff;
+		if( diff > 0 ) {
+		    randomOffset = (int) (random.nextInt(diff));
+		}
+		char randomChar = (char) (randomOffset + randomTransition.getMin());
 		return prepareRandom(strMatch + randomChar, randomTransition.getDest(), minLength, maxLength);
 
 	}
