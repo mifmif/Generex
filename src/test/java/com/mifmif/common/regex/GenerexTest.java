@@ -17,7 +17,7 @@ public class GenerexTest {
     private String pattern;
     private Generex generex;
     
-    @Parameters(name = "Test random: {0}")
+    @Parameters(name = "Test get match: {0}")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 {"Sample multicharacter expression","[A-B]{5,9}"},
@@ -25,6 +25,7 @@ public class GenerexTest {
                 {"Number format","\\d{3,4}"},
                 //{"Any non-number","\\D{3,4}"},
                 {"Any word","\\w{1,2}"},
+                {"Empty string",""},
                 //{"Any non-word","\\W{1,2}"}
         });
     }
@@ -45,8 +46,8 @@ public class GenerexTest {
 
     @Test
     public void testGetMatchedFirstMatchShouldBeTheSameAsMatchWithZeroIndex() {
-        String firstMatch = generex.getFirstMatch().trim();
-        String matchStringZeroIndex = generex.getMatchedString(0).trim();
+        String firstMatch = generex.getFirstMatch();
+        String matchStringZeroIndex = generex.getMatchedString(0);
         Assert.assertTrue(
                 String.format("The generated string '%s' doesn't match the pattern '%s'", firstMatch, pattern),
                 firstMatch.matches(pattern)
@@ -58,5 +59,19 @@ public class GenerexTest {
         Assert.assertEquals(
                 firstMatch,
                 matchStringZeroIndex);
+    }
+
+    @Test
+    public void testIterateThroughAllMatchesShouldReturnConsistentResults () {
+        generex.getFirstMatch();
+        long total = generex.matchedStringsSize();
+        for (int count = 1; count < total; count++) {
+            String matchStringZeroIndex = generex.getMatchedString(count);
+            Assert.assertTrue(
+                    String.format("The generated string '%s' doesn't match the pattern '%s' at iteration #%d",
+                            matchStringZeroIndex, pattern, count),
+                    matchStringZeroIndex.matches(pattern)
+            );
+        }
     }
 }

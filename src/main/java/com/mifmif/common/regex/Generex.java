@@ -134,6 +134,7 @@ public class Generex implements Iterable {
 			result = result.concat("" + node.getMinChar());
 			node = node.getNextNodes().get(0);
 		}
+		result = result.substring(1);
 		return result;
 	}
 

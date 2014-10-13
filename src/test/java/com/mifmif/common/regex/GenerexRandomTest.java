@@ -37,7 +37,7 @@ public class GenerexRandomTest {
         return Arrays.asList(new Object[][] {
                 {"Sample multicharacter expression","[A-Z]{5,9}", 4 , 8},
                 {"Sample expression","[0-3]([a-c]|[e-g]{1,2})", 1 , 3},
-                {"E-mail format","([a-z0-9]+)[@]([a-z0-9]+)[.]([a-z0-9]+)", 8 , 12},
+                {"E-mail format","([a-z0-9]+)[@]([a-z0-9]+)[.]([a-z0-9]+)", 8 , 24},
                 {"Any number","(\\d+)", 4 , 8},
                 {"Any non-number","(\\D+)", 4 , 8},
                 {"Any word","(\\w+)", 4 , 8},

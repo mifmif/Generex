@@ -59,15 +59,16 @@ public class GenerexIteratorTest {
 
         }
     }
-/*
+
+    /*
     @Test
     public void testIterateShouldReturnTheSameAsGetMatchedStrings() {
-        int count = 0;
+        int count = 1;
         Iterator iterator = generex.iterator();
         while (iterator.hasNext()) {
-            String matchedResult = generex.getMatchedString(count+1);
+            String matchedResult = generex.getMatchedString(count);
             String result = iterator.next();
-            Assert.assertEquals(result, matchedResult);
+            Assert.assertEquals(String.format("Iteration %d mismatch", count), result, matchedResult);
             count++;
         }
     }*/
