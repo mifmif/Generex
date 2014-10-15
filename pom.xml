@@ -1,11 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.github.mkolisnyk</groupId>
+	<groupId>com.github.mifmif</groupId>
 	<artifactId>generex</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>Generex</name>
 	<url>https://github.com/mifmif/Generex/tree/master</url>
-	<description>Generex Library for Strings generation based on RegExp</description>
+	<description>Generex A Java Library for regex to Strings generation</description>
 	<packaging>jar</packaging>
 	<licenses>
 		<license>
@@ -17,13 +18,8 @@
 	<developers>
 		<developer>
 			<id>mifmif</id>
-			<name>MIFRAH Youssef</name>
+			<name>mifmif</name>
 			<email>mifmif.com@gmail.com</email>
-		</developer>
-		<developer>
-			<id>mkolisnyk</id>
-			<name>mkolisnyk</name>
-			<email>kolesnik.nickolay@gmail.com</email>
 		</developer>
 	</developers>
 
@@ -38,24 +34,33 @@
 		<maven.pmd.excludes>**/generated-sources/**</maven.pmd.excludes>
 	</properties>
 	<scm>
-		<connection>scm:git:git@github.com:mkolisnyk/Generex.git</connection>
-		<developerConnection>scm:git:git@github.com:mkolisnyk/Generex.git</developerConnection>
-		<url>https://github.com/mkolisnyk/Generex.git</url>
+		<connection>scm:git:git@github.com:mifmif/Generex.git</connection>
+		<developerConnection>scm:git:git@github.com:mifmif/Generex.git</developerConnection>
+		<url>https://github.com/mifmif/Generex.git</url>
 	</scm>
 	<ciManagement>
-		<url>https://travis-ci.org/mkolisnyk/Generex/builds</url>
+		<url>https://travis-ci.org/mifmif/Generex/builds</url>
 		<system>Travis</system>
 		<notifiers>
 			<notifier>
 				<address>mifmif.com@gmail.com</address>
 				<type>mail</type>
 			</notifier>
-			<notifier>
-				<address>kolesnik.nickolay@gmail.com</address>
-				<type>mail</type>
-			</notifier>
 		</notifiers>
 	</ciManagement>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
+
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
@@ -92,22 +97,13 @@
 					<packaging>maven-plugin</packaging>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>javancss-maven-plugin</artifactId>
-				<version>2.0-beta-2</version>
-				<configuration>
-					<excludes>
-						<exclude>**/tests/**/*.*</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
+
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.5</source>
+					<target>1.5</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -158,7 +154,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.7</version>
+				<version>2.8</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -177,21 +173,66 @@
 				<configuration>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
 					<preparationGoals>package install:install-file</preparationGoals>
-					<scmCommentPrefix>#42'[ci skip]'</scmCommentPrefix>
+					<scmCommentPrefix>#3</scmCommentPrefix>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.7</version>
+				<version>2.8</version>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.4.4</version>
+				<version>1.6.2</version>
 				<executions>
 					<execution>
 						<id>default-deploy</id>
@@ -203,7 +244,7 @@
 				</executions>
 				<extensions>true</extensions>
 				<configuration>
-					<serverId>sonatype-nexus-snapshots</serverId>
+					<serverId>ossrh</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 				</configuration>
 			</plugin>
@@ -291,6 +332,9 @@
 					<ccnLimit>10</ccnLimit>
 					<ncssLimit>100</ncssLimit>
 					<failOnViolation>true</failOnViolation>
+					<excludes>
+						<exclude>**/tests/**/*.*</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>
@@ -329,12 +373,6 @@
 			<groupId>dk.brics.automaton</groupId>
 			<artifactId>automaton</artifactId>
 			<version>1.11-8</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
