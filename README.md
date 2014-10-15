@@ -26,12 +26,12 @@ Generex is based on the library http://www.brics.dk/~amoeller/automaton/.
 If you use [Maven](http://maven.apache.org) you can include this library to your project by adding the following dependency: 
 ```xml
 <dependency>
-  <groupId>com.github.mkolisnyk</groupId>
+  <groupId>com.github.mifmif</groupId>
   <artifactId>generex</artifactId>
   <version>0.0.1</version>
 </dependency>
 ```
-The list of all available versions can be found at [Maven Central](http://mvnrepository.com/artifact/com.github.mkolisnyk/generex).
+The list of all available versions can be found at [Maven Central](http://search.maven.org/#artifactdetails|com.github.mifmif|generex|0.0.1|jar).
 
 Here is the sample Java code demonstrating library usage:
 ```java
