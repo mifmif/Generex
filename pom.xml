@@ -18,8 +18,13 @@
 	<developers>
 		<developer>
 			<id>mifmif</id>
-			<name>mifmif</name>
+			<name>MIFRAH Youssef</name>
 			<email>mifmif.com@gmail.com</email>
+		</developer>
+		<developer>
+			<id>mkolisnyk</id>
+			<name>mkolisnyk</name>
+			<email>kolesnik.nickolay@gmail.com</email>
 		</developer>
 	</developers>
 
@@ -44,6 +49,10 @@
 		<notifiers>
 			<notifier>
 				<address>mifmif.com@gmail.com</address>
+				<type>mail</type>
+			</notifier>
+			<notifier>
+				<address>kolesnik.nickolay@gmail.com</address>
 				<type>mail</type>
 			</notifier>
 		</notifiers>
@@ -374,5 +383,14 @@
 			<artifactId>automaton</artifactId>
 			<version>1.11-8</version>
 		</dependency>
+
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 </project>
