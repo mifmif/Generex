@@ -31,7 +31,8 @@ If you use [Maven](http://maven.apache.org) you can include this library to your
   <version>0.0.1</version>
 </dependency>
 ```
-The list of all available versions can be found at [Maven Central](http://search.maven.org/#artifactdetails|com.github.mifmif|generex|0.0.1|jar).
+
+The list of all available versions can be found at [Maven Central](http://search.maven.org/#browse|588844112).
 
 Here is the sample Java code demonstrating library usage:
 ```java
