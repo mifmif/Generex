@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
      <Match>
-       <Class name="com.github.mkolisnyk.muto.reporter.HelpMojo" />
+       <Class name="com.github.mifmif.excluded.HelpMojo" />
        <Method name="build" />
        <Bug pattern="OBL_UNSATISFIED_OBLIGATION" />
      </Match>
