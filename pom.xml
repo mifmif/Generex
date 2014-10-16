@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.mifmif</groupId>
 	<artifactId>generex</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<name>Generex</name>
 	<url>https://github.com/mifmif/Generex/tree/master</url>
 	<description>Generex A Java Library for regex to Strings generation</description>
@@ -383,14 +383,11 @@
 			<artifactId>automaton</artifactId>
 			<version>1.11-8</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 </project>
