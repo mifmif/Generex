@@ -3,6 +3,8 @@ Generex
 A Java library for generating String that match  a given regular expression. it help you generate all Strings that matches a given Regex, random one , or one String from the matched String based on it's index.
 Generex is based on the library http://www.brics.dk/~amoeller/automaton/.
 
+[![Build Status](https://travis-ci.org/mifmif/Generex.png)](https://travis-ci.org/mifmif/Generex)
+
 
 **Features :**
 -
