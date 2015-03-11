@@ -294,7 +294,7 @@ public class Generex implements Iterable {
 		}
 		Random random = new Random();
 		Transition randomTransition = transitions.get(random.nextInt(transitions.size()));
-		int diff = randomTransition.getMax() - randomTransition.getMin();
+		int diff = randomTransition.getMax() - randomTransition.getMin()+1;
 		int randomOffset = diff;
 		if( diff > 0 ) {
 		    randomOffset = (int) (random.nextInt(diff));
