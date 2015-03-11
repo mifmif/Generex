@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.mifmif</groupId>
 	<artifactId>generex</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<name>Generex</name>
 	<url>https://github.com/mifmif/Generex/tree/master</url>
 	<description>Generex A Java Library for regex to Strings generation</description>
