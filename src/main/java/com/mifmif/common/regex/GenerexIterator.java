@@ -24,8 +24,7 @@ import com.mifmif.common.regex.util.Iterator;
 import dk.brics.automaton.State;
 
 /**
- * An implementation of {@code Iterator} class that iterate over the list of
- * Strings that matches a given Regex.
+ * An implementation of {@code Iterator} class that iterate over the list of Strings that matches a given Regex.
  * 
  * @author y.mifrah
  *
@@ -44,21 +43,33 @@ public class GenerexIterator implements Iterator {
 		return !transitionsPath.isEmpty();
 	}
 
+	private boolean ignoreLastChar = false;
+
 	public String next() {
 		while (!transitionsPath.isEmpty()) {
 			TransitionLevel currentLevel = transitionsPath.peek();
 			State state = currentLevel.getState();
 			if (!state.isAccept()) {
 				addNextTransitionLevel(currentLevel);
+				ignoreLastChar = true;
 				continue;
 			} else {
-    			currentValue = "";
-    			for (int i = 0; i < transitionsPath.size() - 1; ++i) {
-    				TransitionLevel transitionLevel = transitionsPath.get(i);
-    				currentValue += transitionLevel.getCurrentChar();
-    			}
-    			jumpToNextPath();
-    			break;
+				currentValue = "";
+				for (int i = 0; i < transitionsPath.size()-1; ++i) {
+					TransitionLevel transitionLevel = transitionsPath.get(i);
+					currentValue += transitionLevel.getCurrentChar();
+				}
+				TransitionLevel transitionLevel = transitionsPath.lastElement();
+				char nextChar = transitionLevel.getCurrentChar();
+				if (nextChar != 0) {
+					if (ignoreLastChar) {
+						ignoreLastChar = false;
+					} else {
+						currentValue += nextChar;
+					}
+				}
+				jumpToNextPath();
+				break;
 			}
 		}
 		return currentValue;
