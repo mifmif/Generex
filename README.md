@@ -30,7 +30,7 @@ If you use [Maven](http://maven.apache.org) you can include this library to your
 <dependency>
   <groupId>com.github.mifmif</groupId>
   <artifactId>generex</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
 </dependency>
 ```
 
