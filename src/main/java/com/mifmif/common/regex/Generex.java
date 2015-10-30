@@ -281,14 +281,14 @@ public class Generex implements Iterable {
 	private String prepareRandom(String strMatch, State state, int minLength, int maxLength) {
 		List<Transition> transitions = state.getSortedTransitions(false);
 
-		if (state.isAccept()) {
-			if (strMatch.length() == maxLength) {
-				return strMatch;
-			}
-			if (Math.random() > 0.7 && strMatch.length() >= minLength) {
-				return strMatch;
-			}
-		}
+		if (state.isAccept() && strMatch.length() >= minLength) {
+            if (strMatch.length() <= maxLength){
+                return strMatch;
+            }
+            if (Math.random() > 0.7) {
+                return strMatch;
+            }
+        }
 		if (transitions.size() == 0) {
 			return strMatch;
 		}
