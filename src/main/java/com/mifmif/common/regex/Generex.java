@@ -140,8 +140,10 @@ public class Generex implements Iterable {
 
 	/**
 	 * @return the number of strings that are matched by the given pattern.
+	 * @throws StackOverflowError if the given pattern generates a large, possibly infinite, number of strings.
 	 */
 	public long matchedStringsSize() {
+		buildRootNode();
 		return rootNode.getNbrMatchedString();
 	}
 
