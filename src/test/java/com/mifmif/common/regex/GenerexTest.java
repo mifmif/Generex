@@ -20,19 +20,21 @@ public class GenerexTest {
 
 	private String pattern;
 	private Generex generex;
+	private int expectedMatchedStringsSize;
 
 	@Parameters(name = "Test get match: {0}")
 	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { "Sample multicharacter expression", "[A-B]{5,9}" }, { "Sample expression", "[0-3]([a-c]|[e-g]{1,2})" },
-				{ "Number format", "\\d{3,4}" },
+		return Arrays.asList(new Object[][] { { "Sample multicharacter expression", "[A-B]{5,9}", 992 }, { "Sample expression", "[0-3]([a-c]|[e-g]{1,2})", 60 },
+				{ "Number format", "\\d{3,4}", 11000 },
 				// {"Any non-number","\\D{3,4}"},
-				{ "Any word", "\\w{1,2}" }, { "Empty string", "" },
+				{ "Any word", "\\w{1,2}", 4032 }, { "Empty string", "", 1 },
 		// {"Any non-word","\\W{1,2}"}
 				});
 	}
 
-	public GenerexTest(String description, String patternValue) {
+	public GenerexTest(String description, String patternValue, int numberOfStrings) {
 		this.pattern = patternValue;
+		this.expectedMatchedStringsSize = numberOfStrings;
 	}
 
 	@Before
@@ -42,6 +44,14 @@ public class GenerexTest {
 
 	@After
 	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void testMatchedStringsSizeShouldReturnExpectedValues() {
+		long size = generex.matchedStringsSize();
+		Assert.assertTrue(
+				String.format("The matched strings size '%s' doesn't match the value '%s'", size, expectedMatchedStringsSize),
+				expectedMatchedStringsSize == size);
 	}
 
 	@Test
@@ -56,7 +66,6 @@ public class GenerexTest {
 
 	@Test
 	public void testIterateThroughAllMatchesShouldReturnConsistentResults() {
-		generex.getFirstMatch();
 		long total = generex.matchedStringsSize();
 		for (int count = 1; count < total; count++) {
 			String matchStringZeroIndex = generex.getMatchedString(count);
