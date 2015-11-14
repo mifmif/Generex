@@ -123,6 +123,19 @@ public class Generex implements Iterable {
 	}
 
 	/**
+	 * Tells whether or not the given pattern (or {@code Automaton}) is infinite, that is, generates an infinite number of
+	 * strings.
+	 * <p>
+	 * For example, the pattern "a+" generates an infinite number of strings whether "a{5}" does not.
+	 *
+	 * @return {@code true} if the pattern (or {@code Automaton}) generates an infinite number of strings, {@code false}
+	 *         otherwise
+	 */
+	public boolean isInfinite() {
+		return !automaton.isFinite();
+	}
+
+	/**
 	 * @return first string in lexicographical order that is matched by the
 	 *         given pattern.
 	 */
