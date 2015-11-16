@@ -17,9 +17,12 @@ package com.mifmif.common.regex;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
+
+import com.mifmif.common.regex.util.Iterator;
 
 import dk.brics.automaton.Automaton;
 
@@ -79,5 +82,35 @@ public class GenerexUnitTest {
 		boolean infinite = generex.isInfinite();
 		// Then
 		assertThat(infinite, is(equalTo(false)));
+	}
+
+	@Test
+	public void shouldReturnIteratorOfAPattern() {
+		// Given
+		Generex generex = new Generex("a");
+		// When
+		Iterator iterator = generex.iterator();
+		// Then
+		assertThat(iterator, is(notNullValue()));
+	}
+
+	@Test
+	public void shouldReturnIteratorOfAnAutomaton() {
+		// Given
+		Automaton finiteAutomaton = Automaton.makeChar('a');
+		Generex generex = new Generex(finiteAutomaton);
+		// When
+		Iterator iterator = generex.iterator();
+		// Then
+		assertThat(iterator, is(notNullValue()));
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void shouldFailToReturnIteratorOfUndefinedAutomaton() {
+		// Given
+		Generex generex = new Generex((Automaton) null);
+		// When
+		generex.iterator();
+		// Then = NullPointerException
 	}
 }
