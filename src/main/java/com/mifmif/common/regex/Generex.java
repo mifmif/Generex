@@ -19,9 +19,11 @@
 package com.mifmif.common.regex;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import com.mifmif.common.regex.util.Iterable;
@@ -43,29 +45,54 @@ import dk.brics.automaton.Transition;
  */
 public class Generex implements Iterable {
 
-    private Map<String, String> predefinedCharacterClasses = new HashMap<String, String>() {
-        private static final long serialVersionUID = 1L;
+	/**
+	 * The predefined character classes supported by {@code Generex}.
+	 * <p>
+	 * An immutable map containing as keys the character classes and values the equivalent regular expression syntax.
+	 * 
+	 * @see #createRegExp(String)
+	 */
+	private static final Map<String, String> PREDEFINED_CHARACTER_CLASSES;
 
-        {
-            put("\\\\d","[0-9]");
-            put("\\\\D","[^0-9]");
-            put("\\\\s","[ \t\n\f\r]");
-            put("\\\\S","[^ \t\n\f\r]");
-            put("\\\\w","[a-zA-Z_0-9]");
-            put("\\\\W","[^a-zA-Z_0-9]");
-        }
-    };
+	static {
+		Map<String, String> characterClasses = new HashMap<String, String>();
+		characterClasses.put("\\\\d", "[0-9]");
+		characterClasses.put("\\\\D", "[^0-9]");
+		characterClasses.put("\\\\s", "[ \t\n\f\r]");
+		characterClasses.put("\\\\S", "[^ \t\n\f\r]");
+		characterClasses.put("\\\\w", "[a-zA-Z_0-9]");
+		characterClasses.put("\\\\W", "[^a-zA-Z_0-9]");
+		PREDEFINED_CHARACTER_CLASSES = Collections.unmodifiableMap(characterClasses);
+	}
     
 	public Generex(String regex) {
-	    for (String key : predefinedCharacterClasses.keySet()) {
-	        regex = regex.replaceAll(key, predefinedCharacterClasses.get(key));
-	    }
-		regExp = new RegExp(regex);
+		regExp = createRegExp(regex);
 		automaton = regExp.toAutomaton();
 	}
 
 	public Generex(Automaton automaton) {
 		this.automaton = automaton;
+	}
+
+	/**
+	 * Creates a {@code RegExp} instance from the given regular expression.
+	 * <p>
+	 * Predefined character classes are replaced with equivalent regular expression syntax prior creating the instance.
+	 *
+	 * @param regex the regular expression used to build the {@code RegExp} instance
+	 * @return a {@code RegExp} instance for the given regular expression
+	 * @throws NullPointerException if the given regular expression is {@code null}
+	 * @throws IllegalArgumentException if an error occurred while parsing the given regular expression
+	 * @throws StackOverflowError if the regular expression has to many transitions
+	 * @see #PREDEFINED_CHARACTER_CLASSES
+	 * @see #isValidPattern(String)
+	 */
+	private static RegExp createRegExp(String regex) {
+		String finalRegex = regex;
+		for (Entry<String, String> charClass : PREDEFINED_CHARACTER_CLASSES.entrySet()) {
+			finalRegex = finalRegex.replaceAll(charClass.getKey(), charClass.getValue());
+		}
+		return new RegExp(finalRegex);
 	}
 
 	private RegExp regExp;
@@ -324,4 +351,20 @@ public class Generex implements Iterable {
 
 	}
 
+	/**
+	 * Tells whether or not the given regular expression is a valid pattern (for {@code Generex}).
+	 *
+	 * @param regex the regular expression that will be validated
+	 * @return {@code true} if the regular expression is valid, {@code false} otherwise
+	 * @throws NullPointerException if the given regular expression is {@code null}
+	 */
+	public static boolean isValidPattern(String regex) {
+		try {
+			createRegExp(regex);
+			return true;
+		} catch (IllegalArgumentException ignore) { // NOPMD - Not valid.
+		} catch (StackOverflowError ignore) { // NOPMD - Possibly valid but stack not big enough to handle it.
+		}
+		return false;
+	}
 }
