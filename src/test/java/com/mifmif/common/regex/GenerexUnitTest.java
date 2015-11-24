@@ -31,6 +31,25 @@ import dk.brics.automaton.Automaton;
  */
 public class GenerexUnitTest {
 
+	@Test(expected = NullPointerException.class)
+	public void shouldFailToCreateAnInstanceWithUndefinedPattern() {
+		// Given
+		String undefinedPattern = null;
+		// When
+		Generex generex = new Generex(undefinedPattern);
+		// Then = NullPointerException
+	}
+
+	@Test
+	public void shouldNotFailToCreateAnInstanceWithUndefinedAutomaton() {
+		// Given
+		Automaton undefinedAutomaton = null;
+		// When
+		Generex generex = new Generex(undefinedAutomaton);
+		// Then
+		assertThat(generex, is(notNullValue()));
+	}
+
 	@Test
 	public void shouldReturnTrueWhenQueryingIfInfiniteWithInfinitePattern() {
 		// Given
@@ -112,5 +131,75 @@ public class GenerexUnitTest {
 		// When
 		generex.iterator();
 		// Then = NullPointerException
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void shouldFailToValidateUndefinedPattern() {
+		// Given
+		String undefinedPattern = null;
+		// When
+		Generex.isValidPattern(undefinedPattern);
+		// Then = NullPointerException
+	}
+
+	@Test
+	public void shouldReturnTrueWhenValidatingValidPattern() {
+		// Given
+		String validPattern = "[a-z0-9]{1,3}";
+		// When
+		boolean valid = Generex.isValidPattern(validPattern);
+		// Then
+		assertThat(valid, is(equalTo(true)));
+	}
+
+	@Test
+	public void shouldReturnTrueWhenValidatingValidPatternWithPredefinedClasses() {
+		// Given
+		String validPattern = "\\d{2,3}\\w{1}";
+		// When
+		boolean valid = Generex.isValidPattern(validPattern);
+		// Then
+		assertThat(valid, is(equalTo(true)));
+	}
+
+	@Test
+	public void shouldReturnFalseWhenValidatingInvalidPattern() {
+		// Given
+		String invalidPattern = "a)";
+		// When
+		boolean valid = Generex.isValidPattern(invalidPattern);
+		// Then
+		assertThat(valid, is(equalTo(false)));
+	}
+
+	@Test
+	public void shouldReturnFalseWhenValidatingPatternWithRepetitionsHigherThanMaxIntegerValue() {
+		// Given
+		String invalidPattern = "[a-z0-9]{" + ((long) Integer.MAX_VALUE + 1) + "}";
+		// When
+		boolean valid = Generex.isValidPattern(invalidPattern);
+		// Then
+		assertThat(valid, is(equalTo(false)));
+	}
+
+	@Test
+	public void shouldReturnFalseWhenValidatingPatternWithHigherNumberOfTransitions() {
+		// Given
+		String invalidPattern = createPatternWithTransitions(1000000);
+		// When
+		boolean valid = Generex.isValidPattern(invalidPattern);
+		// Then
+		assertThat(valid, is(equalTo(false)));
+	}
+
+	private static String createPatternWithTransitions(int numberOfTransitions) {
+		StringBuilder strBuilder = new StringBuilder(numberOfTransitions * 2);
+		for (int i = 1; i < numberOfTransitions; i++) {
+			strBuilder.append('a').append('|');
+		}
+		if (numberOfTransitions > 0) {
+			strBuilder.append('a');
+		}
+		return strBuilder.toString();
 	}
 }
