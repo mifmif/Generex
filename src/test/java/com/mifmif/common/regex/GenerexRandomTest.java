@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.mifmif.common.regex;
 
 import java.util.Arrays;
