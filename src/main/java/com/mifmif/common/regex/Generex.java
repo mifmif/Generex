@@ -1,5 +1,5 @@
 /*
-  * Copyright 2014 y.mifrah
+ * Copyright 2014 y.mifrah
  *
 
  *
@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.mifmif.common.regex.util.Iterable;
 import com.mifmif.common.regex.util.Iterator;
@@ -35,10 +37,8 @@ import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
 
 /**
- * A Java utility class that help generating string values that match a given
- * regular expression.It generate all values that are matched by the Regex, a
- * random value, or you can generate only a specific string based on it's
- * lexicographical order .
+ * A Java utility class that help generating string values that match a given regular expression.It generate all values that are matched by the Regex, a random
+ * value, or you can generate only a specific string based on it's lexicographical order .
  * 
  * @author y.mifrah
  *
@@ -53,6 +53,11 @@ public class Generex implements Iterable {
 	 * @see #createRegExp(String)
 	 */
 	private static final Map<String, String> PREDEFINED_CHARACTER_CLASSES;
+	private RegExp regExp;
+	private Automaton automaton;
+	private List<String> matchedStrings = new ArrayList<String>();
+	private Node rootNode;
+	private boolean isTransactionNodeBuilt;
 
 	static {
 		Map<String, String> characterClasses = new HashMap<String, String>();
@@ -64,14 +69,17 @@ public class Generex implements Iterable {
 		characterClasses.put("\\\\W", "[^a-zA-Z_0-9]");
 		PREDEFINED_CHARACTER_CLASSES = Collections.unmodifiableMap(characterClasses);
 	}
-    
+
 	public Generex(String regex) {
+		regex=requote(regex);
 		regExp = createRegExp(regex);
 		automaton = regExp.toAutomaton();
+		random = new Random();
 	}
 
 	public Generex(Automaton automaton) {
 		this.automaton = automaton;
+		random = new Random();
 	}
 
 	/**
@@ -79,11 +87,15 @@ public class Generex implements Iterable {
 	 * <p>
 	 * Predefined character classes are replaced with equivalent regular expression syntax prior creating the instance.
 	 *
-	 * @param regex the regular expression used to build the {@code RegExp} instance
+	 * @param regex
+	 *            the regular expression used to build the {@code RegExp} instance
 	 * @return a {@code RegExp} instance for the given regular expression
-	 * @throws NullPointerException if the given regular expression is {@code null}
-	 * @throws IllegalArgumentException if an error occurred while parsing the given regular expression
-	 * @throws StackOverflowError if the regular expression has to many transitions
+	 * @throws NullPointerException
+	 *             if the given regular expression is {@code null}
+	 * @throws IllegalArgumentException
+	 *             if an error occurred while parsing the given regular expression
+	 * @throws StackOverflowError
+	 *             if the regular expression has to many transitions
 	 * @see #PREDEFINED_CHARACTER_CLASSES
 	 * @see #isValidPattern(String)
 	 */
@@ -95,22 +107,24 @@ public class Generex implements Iterable {
 		return new RegExp(finalRegex);
 	}
 
-	private RegExp regExp;
-	private Automaton automaton;
-	private List<String> matchedStrings = new ArrayList<String>();
-	private Node rootNode;
-	private boolean isTransactionNodeBuilt;
+	/**
+	 * initialize the random instance used with a seed value  to generate a 
+	 * pseudo random suite of strings based on the passed seed and matches the used regular expression
+	 * instance
+	 * 
+	 * @param seed
+	 */
+	public void setSeed(long seed) {
+		random=new Random(seed);
+	}
 
 	/**
 	 * @param indexOrder
 	 *            ( 1<= indexOrder <=n)
-	 * @return The matched string by the given pattern in the given it's order
-	 *         in the sorted list of matched String.<br>
-	 *         <code>indexOrder</code> between 1 and <code>n</code> where
-	 *         <code>n</code> is the number of matched String.<br>
-	 *         If indexOrder >= n , return an empty string. if there is an
-	 *         infinite number of String that matches the given Regex, the
-	 *         method throws {@code StackOverflowError}
+	 * @return The matched string by the given pattern in the given it's order in the sorted list of matched String.<br>
+	 *         <code>indexOrder</code> between 1 and <code>n</code> where <code>n</code> is the number of matched String.<br>
+	 *         If indexOrder >= n , return an empty string. if there is an infinite number of String that matches the given Regex, the method throws
+	 *         {@code StackOverflowError}
 	 */
 	public String getMatchedString(int indexOrder) {
 		buildRootNode();
@@ -150,21 +164,18 @@ public class Generex implements Iterable {
 	}
 
 	/**
-	 * Tells whether or not the given pattern (or {@code Automaton}) is infinite, that is, generates an infinite number of
-	 * strings.
+	 * Tells whether or not the given pattern (or {@code Automaton}) is infinite, that is, generates an infinite number of strings.
 	 * <p>
 	 * For example, the pattern "a+" generates an infinite number of strings whether "a{5}" does not.
 	 *
-	 * @return {@code true} if the pattern (or {@code Automaton}) generates an infinite number of strings, {@code false}
-	 *         otherwise
+	 * @return {@code true} if the pattern (or {@code Automaton}) generates an infinite number of strings, {@code false} otherwise
 	 */
 	public boolean isInfinite() {
 		return !automaton.isFinite();
 	}
 
 	/**
-	 * @return first string in lexicographical order that is matched by the
-	 *         given pattern.
+	 * @return first string in lexicographical order that is matched by the given pattern.
 	 */
 	public String getFirstMatch() {
 		buildRootNode();
@@ -180,7 +191,8 @@ public class Generex implements Iterable {
 
 	/**
 	 * @return the number of strings that are matched by the given pattern.
-	 * @throws StackOverflowError if the given pattern generates a large, possibly infinite, number of strings.
+	 * @throws StackOverflowError
+	 *             if the given pattern generates a large, possibly infinite, number of strings.
 	 */
 	public long matchedStringsSize() {
 		buildRootNode();
@@ -188,8 +200,7 @@ public class Generex implements Iterable {
 	}
 
 	/**
-	 * Prepare the rootNode and it's child nodes so that we can get
-	 * matchedString by index
+	 * Prepare the rootNode and it's child nodes so that we can get matchedString by index
 	 */
 	private void buildRootNode() {
 		if (isTransactionNodeBuilt)
@@ -224,8 +235,7 @@ public class Generex implements Iterable {
 	}
 
 	/**
-	 * Build list of nodes that present possible transactions from the
-	 * <code>state</code>.
+	 * Build list of nodes that present possible transactions from the <code>state</code>.
 	 * 
 	 * @param state
 	 * @return
@@ -257,6 +267,7 @@ public class Generex implements Iterable {
 	}
 
 	private int preparedTransactionNode;
+	private Random random;
 
 	/**
 	 * Generate all Strings that matches the given Regex.
@@ -271,9 +282,7 @@ public class Generex implements Iterable {
 	}
 
 	/**
-	 * Generate subList with a size of <code>limit</code> of Strings that
-	 * matches the given Regex. the Strings are ordered in lexicographical
-	 * order.
+	 * Generate subList with a size of <code>limit</code> of Strings that matches the given Regex. the Strings are ordered in lexicographical order.
 	 * 
 	 * @param limit
 	 * @return
@@ -286,8 +295,7 @@ public class Generex implements Iterable {
 	}
 
 	/**
-	 * Generate and return a random String that match the pattern used in this
-	 * Generex.
+	 * Generate and return a random String that match the pattern used in this Generex.
 	 * 
 	 * @return
 	 */
@@ -296,8 +304,7 @@ public class Generex implements Iterable {
 	}
 
 	/**
-	 * Generate and return a random String that match the pattern used in this
-	 * Generex, and the string has a length >= <code>minLength</code>
+	 * Generate and return a random String that match the pattern used in this Generex, and the string has a length >= <code>minLength</code>
 	 * 
 	 * @param minLength
 	 * @return
@@ -307,8 +314,7 @@ public class Generex implements Iterable {
 	}
 
 	/**
-	 * Generate and return a random String that match the pattern used in this
-	 * Generex, and the string has a length >= <code>minLength</code> and <=
+	 * Generate and return a random String that match the pattern used in this Generex, and the string has a length >= <code>minLength</code> and <=
 	 * <code>maxLength</code>
 	 * 
 	 * 
@@ -334,12 +340,11 @@ public class Generex implements Iterable {
 		if (transitions.size() == 0) {
 			return strMatch;
 		}
-		Random random = new Random();
 		Transition randomTransition = transitions.get(random.nextInt(transitions.size()));
-		int diff = randomTransition.getMax() - randomTransition.getMin()+1;
+		int diff = randomTransition.getMax() - randomTransition.getMin() + 1;
 		int randomOffset = diff;
-		if( diff > 0 ) {
-		    randomOffset = (int) (random.nextInt(diff));
+		if (diff > 0) {
+			randomOffset = (int) (random.nextInt(diff));
 		}
 		char randomChar = (char) (randomOffset + randomTransition.getMin());
 		return prepareRandom(strMatch + randomChar, randomTransition.getDest(), minLength, maxLength);
@@ -354,9 +359,11 @@ public class Generex implements Iterable {
 	/**
 	 * Tells whether or not the given regular expression is a valid pattern (for {@code Generex}).
 	 *
-	 * @param regex the regular expression that will be validated
+	 * @param regex
+	 *            the regular expression that will be validated
 	 * @return {@code true} if the regular expression is valid, {@code false} otherwise
-	 * @throws NullPointerException if the given regular expression is {@code null}
+	 * @throws NullPointerException
+	 *             if the given regular expression is {@code null}
 	 */
 	public static boolean isValidPattern(String regex) {
 		try {
@@ -367,4 +374,33 @@ public class Generex implements Iterable {
 		}
 		return false;
 	}
+
+	 /**
+	  * Requote a regular expression by escaping some parts of it from generation without need to escape each special character one by one.
+	 * <br>
+	 * this is done by setting the part to be interpreted as normal characters (thus, quote all meta-characters) between \Q and \E , ex : 
+	 * <br>
+	 * <code> minion_\d{3}\Q@gru.evil\E </code>
+	 * <br>
+	 * will be transformed to :
+	 * <br>
+	 * <code> minion_\d{3}\@gru\.evil </code>
+	 * @param regex
+	 * @return  
+	 */
+	private static String requote(String regex) {
+	        final Pattern patternRequoted = Pattern.compile("\\\\Q(.*?)\\\\E");
+	        // http://stackoverflow.com/questions/399078/what-special-characters-must-be-escaped-in-regular-expressions
+	        // adding "@" prevents StackOverflowError inside generex: https://github.com/mifmif/Generex/issues/21
+	        final Pattern patternSpecial = Pattern.compile("[.^$*+?(){|\\[\\\\@]");
+	        StringBuilder sb = new StringBuilder(regex);
+	        Matcher matcher = patternRequoted.matcher(sb);
+	        while (matcher.find()) {
+	            sb.replace(matcher.start(), matcher.end(), patternSpecial.matcher(matcher.group(1)).replaceAll("\\\\$0"));
+	            //matcher.reset();
+	        }
+	        return sb.toString();
+	    }
+
+
 }
