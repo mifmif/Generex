@@ -333,7 +333,7 @@ public class Generex implements Iterable {
 			if (strMatch.length() == maxLength) {
 				return strMatch;
 			}
-			if (Math.random() > 0.7 && strMatch.length() >= minLength) {
+			if (random.nextInt() > 0.3*Integer.MAX_VALUE && strMatch.length() >= minLength) {
 				return strMatch;
 			}
 		}

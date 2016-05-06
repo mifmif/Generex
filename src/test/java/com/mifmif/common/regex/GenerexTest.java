@@ -73,4 +73,40 @@ public class GenerexTest {
 					matchStringZeroIndex.matches(pattern));
 		}
 	}
+
+
+	@Test
+	public void testSeed() {
+	    long seed = -5106534569952410475L;
+	    String pattern = "[0-9][a-zA-Z]";
+
+	    Generex firstGenerex = new Generex(pattern);
+	    firstGenerex.setSeed(seed);
+	    String firstValue = firstGenerex.random();
+
+	    Generex secondGenerex = new Generex(pattern);
+	    secondGenerex.setSeed(seed);
+	    String secondValue = secondGenerex.random();
+
+	    Assert.assertEquals(firstValue, secondValue);
+	}
+	
+	
+
+	@Test
+	public void testSeedWithMinMaxQuantifier() {
+	    long seed = -5106534569952410475L;
+	    String pattern = "[A-Z]{1,10}";
+
+	    Generex firstGenerex = new Generex(pattern);
+	    firstGenerex.setSeed(seed);
+	    String firstValue = firstGenerex.random();
+
+	    Generex secondGenerex = new Generex(pattern);
+	    secondGenerex.setSeed(seed);
+	    String secondValue = secondGenerex.random();
+
+	    Assert.assertEquals(firstValue, secondValue);
+	}
+
 }
