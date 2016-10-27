@@ -71,15 +71,23 @@ public class Generex implements Iterable {
 	}
 
 	public Generex(String regex) {
-		regex=requote(regex);
-		regExp = createRegExp(regex);
-		automaton = regExp.toAutomaton();
-		random = new Random();
+		this(regex, new Random());
 	}
 
 	public Generex(Automaton automaton) {
+		this(automaton, new Random());
+	}
+
+	public Generex(String regex, Random random) {
+		regex=requote(regex);
+		regExp = createRegExp(regex);
+		automaton = regExp.toAutomaton();
+		this.random = random;
+	}
+
+	public Generex(Automaton automaton, Random random) {
 		this.automaton = automaton;
-		random = new Random();
+		this.random = random;
 	}
 
 	/**

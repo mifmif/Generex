@@ -97,7 +97,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
-				<version>2.3.1</version>
+				<version>2.5.2</version>
 				<configuration>
 					<file>target/${project.artifactId}-${project.version}.jar</file>
 					<groupId>${project.groupId}</groupId>
@@ -109,7 +109,7 @@
 
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.5.1</version>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
@@ -118,7 +118,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.0.2</version>
 				<configuration>
 					<excludes>
 						<exclude>*</exclude>
@@ -153,7 +153,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
+				<version>2.6</version>
 				<configuration>
 					<descriptors>
 						<descriptor>./sources.xml</descriptor>
@@ -163,12 +163,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.8</version>
+				<version>2.10</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
+				<version>2.10.3</version>
 				<configuration>
 					<show>private</show>
 					<nohelp>false</nohelp>
@@ -188,7 +188,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.8</version>
+				<version>2.8.2</version>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
@@ -198,7 +198,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.2</version>
+				<version>3.0.1</version>
 				<executions>
 					<execution>
 						<goals>
@@ -242,7 +242,7 @@
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.2</version>
+				<version>1.6.3</version>
 				<executions>
 					<execution>
 						<id>default-deploy</id>
@@ -261,7 +261,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.6</version>
 				<configuration>
 					<failOnViolation>true</failOnViolation>
 					<excludeRoots>
@@ -336,7 +336,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>javancss-maven-plugin</artifactId>
-				<version>2.0-beta-2</version>
+				<version>2.0</version>
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<ccnLimit>10</ccnLimit>
@@ -357,7 +357,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>2.5.2</version>
+				<version>3.0.3</version>
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<failOnError>true</failOnError>
@@ -387,7 +387,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
