@@ -21,10 +21,12 @@ package com.mifmif.common.regex;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -336,27 +338,38 @@ public class Generex implements Iterable {
 
 	private String prepareRandom(String strMatch, State state, int minLength, int maxLength) {
 		List<Transition> transitions = state.getSortedTransitions(false);
-
-		if (state.isAccept()) {
-			if (strMatch.length() == maxLength) {
+		Set<Integer> selectedTransitions = new HashSet<Integer>();
+		String result = strMatch;
+		while (transitions.size() > selectedTransitions.size()) {
+			if (state.isAccept()) {
+				if (strMatch.length() == maxLength) {
+					return strMatch;
+				}
+				if (random.nextInt() > 0.3 * Integer.MAX_VALUE && strMatch.length() >= minLength) {
+					return strMatch;
+				}
+			}
+			if (transitions.size() == 0) {
 				return strMatch;
 			}
-			if (random.nextInt() > 0.3*Integer.MAX_VALUE && strMatch.length() >= minLength) {
-				return strMatch;
+			int nextInt = random.nextInt(transitions.size());
+			if (selectedTransitions.contains(nextInt))
+				continue;
+			selectedTransitions.add(nextInt);
+			Transition randomTransition = transitions.get(nextInt);
+			int diff = randomTransition.getMax() - randomTransition.getMin() + 1;
+			int randomOffset = diff;
+			if (diff > 0) {
+				randomOffset = (int) (random.nextInt(diff));
+			}
+			char randomChar = (char) (randomOffset + randomTransition.getMin());
+			result = prepareRandom(strMatch + randomChar, randomTransition.getDest(), minLength, maxLength);
+			int resultLength = result.length();
+			if (minLength <= resultLength && resultLength <= maxLength) {
+				break;
 			}
 		}
-		if (transitions.size() == 0) {
-			return strMatch;
-		}
-		Transition randomTransition = transitions.get(random.nextInt(transitions.size()));
-		int diff = randomTransition.getMax() - randomTransition.getMin() + 1;
-		int randomOffset = diff;
-		if (diff > 0) {
-			randomOffset = (int) (random.nextInt(diff));
-		}
-		char randomChar = (char) (randomOffset + randomTransition.getMin());
-		return prepareRandom(strMatch + randomChar, randomTransition.getDest(), minLength, maxLength);
-
+		return result;
 	}
 
 	public Iterator iterator() {
