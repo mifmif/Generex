@@ -337,41 +337,52 @@ public class Generex implements Iterable {
         List<Transition> transitions = state.getSortedTransitions(false);
         Set<Integer> selectedTransitions = new HashSet<Integer>();
         String result = strMatch;
-        while (transitions.size() > selectedTransitions.size()) {
-            if (state.isAccept()) {
-                if (strMatch.length() == maxLength) {
-                    return strMatch;
-                }
-                if (random.nextInt() > 0.3 * Integer.MAX_VALUE && strMatch.length() >= minLength) {
-                    return strMatch;
-                }
-            }
-            if (transitions.size() == 0) {
+
+        for (int resultLength = -1;
+            transitions.size() > selectedTransitions.size()
+                && (resultLength < minLength || resultLength > maxLength);
+            resultLength = result.length()) {
+
+            if (randomPrepared(strMatch, state, minLength, maxLength, transitions)) {
                 return strMatch;
             }
+
             int nextInt = random.nextInt(transitions.size());
-            if (selectedTransitions.contains(nextInt))
-                continue;
-            selectedTransitions.add(nextInt);
-            Transition randomTransition = transitions.get(nextInt);
-            int diff = randomTransition.getMax() - randomTransition.getMin() + 1;
-            int randomOffset = diff;
-            if (diff > 0) {
-                randomOffset = (int) (random.nextInt(diff));
-            }
-            char randomChar = (char) (randomOffset + randomTransition.getMin());
-            result = prepareRandom(strMatch + randomChar, randomTransition.getDest(), minLength, maxLength);
-            int resultLength = result.length();
-            if (minLength <= resultLength && resultLength <= maxLength) {
-                break;
+            if (!selectedTransitions.contains(nextInt)) {
+                selectedTransitions.add(nextInt);
+
+                Transition randomTransition = transitions.get(nextInt);
+                int diff = randomTransition.getMax() - randomTransition.getMin() + 1;
+                int randomOffset = diff > 0 ? random.nextInt(diff) : diff;
+                char randomChar = (char) (randomOffset + randomTransition.getMin());
+                result = prepareRandom(strMatch + randomChar, randomTransition.getDest(), minLength, maxLength);
             }
         }
+
         return result;
+    }
+
+    private boolean randomPrepared(
+        String strMatch,
+        State state,
+        int minLength,
+        int maxLength,
+        List<Transition> transitions) {
+
+        if (state.isAccept()) {
+            if (strMatch.length() == maxLength) {
+                return true;
+            }
+            if (random.nextInt() > 0.3 * Integer.MAX_VALUE && strMatch.length() >= minLength) {
+                return true;
+            }
+        }
+
+        return transitions.size() == 0;
     }
 
     public Iterator iterator() {
         return new GenerexIterator(automaton.getInitialState());
-
     }
 
     /**
