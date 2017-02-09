@@ -425,4 +425,20 @@ public class Generex implements Iterable {
         return sb.toString();
     }
 
+    /**
+     * Get the length of the longest string that can be generated.
+     * @return
+     */
+    public int generateMaxLength() {
+        return automaton.getNumberOfStates() - 1;
+    }
+
+    /**
+     * Get the length of the smallest string that can be generated.
+     * @return
+     */
+    public int generateMinLength() {
+        return automaton.getShortestExample(true).length();
+    }
+
 }
