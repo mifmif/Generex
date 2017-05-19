@@ -21,6 +21,6 @@ package com.mifmif.common.regex.util;
  * @author y.mifrah
  *
  */
-public interface Iterable {
+public interface Iterable extends java.lang.Iterable<String>{
 	Iterator iterator();
 }
