@@ -84,6 +84,7 @@ public class GenerexIterator implements Iterator {
 	/**
 	 * Always throws an {@link UnsupportedOperationException} (default behavior for Java 8).
 	 */
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("remove");
 	}
