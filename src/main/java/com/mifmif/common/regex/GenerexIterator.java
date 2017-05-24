@@ -82,6 +82,14 @@ public class GenerexIterator implements Iterator {
 	}
 
 	/**
+	 * Always throws an {@link UnsupportedOperationException} (default behavior for Java 8).
+	 */
+	@Override
+	public void remove() {
+		throw new UnsupportedOperationException("remove");
+	}
+
+	/**
 	 * A step, in the iteration process, to build a string using {@code State}s.
 	 * <p>
 	 * It's responsible to keep the information of a {@code State}, like current char and transitions that need to be followed.

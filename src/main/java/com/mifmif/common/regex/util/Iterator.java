@@ -21,7 +21,7 @@ package com.mifmif.common.regex.util;
  * @author y.mifrah
  *
  */
-public interface Iterator {
+public interface Iterator extends java.util.Iterator<String>{
 	boolean hasNext();
 	String next();
 }

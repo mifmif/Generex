@@ -5,4 +5,12 @@
        <Method name="build" />
        <Bug pattern="OBL_UNSATISFIED_OBLIGATION" />
      </Match>
+    <Match>
+        <Class name="com.mifmif.common.regex.util.Iterable"/>
+        <Bug pattern="NM_SAME_SIMPLE_NAME_AS_INTERFACE"/>
+    </Match>
+    <Match>
+        <Class name="com.mifmif.common.regex.util.Iterator"/>
+        <Bug pattern="NM_SAME_SIMPLE_NAME_AS_INTERFACE"/>
+    </Match>
 </FindBugsFilter>

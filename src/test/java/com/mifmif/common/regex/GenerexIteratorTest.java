@@ -70,4 +70,20 @@ public class GenerexIteratorTest {
 		}
 		Assert.assertEquals("Incorrect number of iterated strings,", generex.matchedStringsSize(), count - 1);
 	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void testIterateRemoveFirstShouldAlwaysThrowException() {
+		Iterator iterator = generex.iterator();
+		iterator.remove();
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void testIterateRemoveLastShouldAlwaysThrowException() {
+		Iterator iterator = generex.iterator();
+		while (iterator.hasNext()) {
+			// Iterate through all entries until last one
+			iterator.next();
+		}
+		iterator.remove();
+	}
 }
