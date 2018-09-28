@@ -20,21 +20,28 @@ public class GenerexTest {
 
 	private String pattern;
 	private Generex generex;
-	private int expectedMatchedStringsSize;
+    private int expectedMatchedStringsSize;
+    private int expectedStringsMinLength;
+    private int expectedStringsMaxLength;
 
 	@Parameters(name = "Test get match: {0}")
 	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { "Sample multicharacter expression", "[A-B]{5,9}", 992 }, { "Sample expression", "[0-3]([a-c]|[e-g]{1,2})", 60 },
-				{ "Number format", "\\d{3,4}", 11000 },
-				// {"Any non-number","\\D{3,4}"},
-				{ "Any word", "\\w{1,2}", 4032 }, { "Empty string", "", 1 },
-		// {"Any non-word","\\W{1,2}"}
-				});
+		return Arrays.asList(new Object[][] { //
+			{"Sample multicharacter expression", "[A-B]{5,9}", 992, 5, 9}, //
+			{"Sample expression", "[0-3]([a-c]|[e-g]{1,2})", 60, 2, 3}, //
+			{"Number format", "\\d{3,4}", 11000, 3, 4}, //
+			// {"Any non-number","\\D{3,4}", ???, 3, 4}, //
+			{"Any word", "\\w{1,2}", 4032, 1, 2}, //
+			{"Empty string", "", 1, 0, 0}, //
+			// {"Any non-word","\\W{1,2}", ???, 1, 2} //
+		});
 	}
 
-	public GenerexTest(String description, String patternValue, int numberOfStrings) {
+	public GenerexTest(String description, String patternValue, int numberOfStrings, int minLength, int maxLength) {
 		this.pattern = patternValue;
-		this.expectedMatchedStringsSize = numberOfStrings;
+        this.expectedMatchedStringsSize = numberOfStrings;
+        this.expectedStringsMinLength = minLength;
+        this.expectedStringsMaxLength = maxLength;
 	}
 
 	@Before
@@ -52,6 +59,22 @@ public class GenerexTest {
 		Assert.assertTrue(
 				String.format("The matched strings size '%s' doesn't match the value '%s'", size, expectedMatchedStringsSize),
 				expectedMatchedStringsSize == size);
+	}
+
+	@Test
+	public void testMinLengthMatchedStringsShouldReturnExpectedValues() {
+		long size = generex.generateMinLength();
+		Assert.assertTrue(
+				String.format("The minimum lengh matched strings '%s' doesn't match the value '%s'", size, expectedStringsMinLength),
+				expectedStringsMinLength == size);
+	}
+
+	@Test
+	public void testMaxLengthMatchedStringsShouldReturnExpectedValues() {
+		long size = generex.generateMaxLength();
+		Assert.assertTrue(
+				String.format("The maximum lengh matched strings '%s' doesn't match the value '%s'", size, expectedStringsMaxLength),
+				expectedStringsMaxLength == size);
 	}
 
 	@Test
