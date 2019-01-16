@@ -125,11 +125,11 @@ public class Generex implements Iterable {
     }
 
     /**
-     * @param indexOrder ( 1<= indexOrder <=n)
+     * @param indexOrder ( 1&lt;= indexOrder &lt;=n)
      * @return The matched string by the given pattern in the given it's order in the sorted list of matched String.<br>
      * <code>indexOrder</code> between 1 and <code>n</code> where <code>n</code> is the number of matched String.<br> If
-     * indexOrder >= n , return an empty string. if there is an infinite number of String that matches the given Regex,
-     * the method throws {@code StackOverflowError}
+     * indexOrder &gt;= n , return an empty string. if there is an infinite number of String that matches the given
+     * Regex, the method throws {@code StackOverflowError}
      */
     public String getMatchedString(int indexOrder) {
         buildRootNode();
@@ -311,8 +311,8 @@ public class Generex implements Iterable {
     }
 
     /**
-     * Generate and return a random String that match the pattern used in this Generex, and the string has a length >=
-     * <code>minLength</code>
+     * Generate and return a random String that match the pattern used in this Generex, and the string has a length
+     * &gt;= <code>minLength</code>
      *
      * @param minLength
      * @return
@@ -322,8 +322,8 @@ public class Generex implements Iterable {
     }
 
     /**
-     * Generate and return a random String that match the pattern used in this Generex, and the string has a length >=
-     * <code>minLength</code> and <= <code>maxLength</code>
+     * Generate and return a random String that match the pattern used in this Generex, and the string has a length
+     * &gt;= <code>minLength</code> and &lt;= <code>maxLength</code>
      *
      * @param minLength
      * @param maxLength
