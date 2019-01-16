@@ -380,9 +380,9 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>dk.brics.automaton</groupId>
+			<groupId>dk.brics</groupId>
 			<artifactId>automaton</artifactId>
-			<version>1.11-8</version>
+			<version>1.12-1</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
