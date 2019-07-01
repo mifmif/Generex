@@ -402,6 +402,11 @@ public class Generex implements Iterable {
         return false;
     }
 
+    private static final Pattern PATTERN_QUOTED = Pattern.compile("\\\\Q(.*?)\\\\E", Pattern.DOTALL | Pattern.MULTILINE);
+    // http://stackoverflow.com/questions/399078/what-special-characters-must-be-escaped-in-regular-expressions
+    // adding "@" prevents StackOverflowError inside generex: https://github.com/mifmif/Generex/issues/21
+    // &"<#~ also need to be escaped due to special treatment in automaton
+    private static final Pattern PATTERN_SPECIALS = Pattern.compile("[.^$*+?(){}|\\[\\\\@&\"<#~]");
     /**
      * Requote a regular expression by escaping some parts of it from generation without need to escape each special
      * character one by one. <br> this is done by setting the part to be interpreted as normal characters (thus, quote
@@ -411,16 +416,22 @@ public class Generex implements Iterable {
      * @param regex
      * @return
      */
+    // https://github.com/mifmif/Generex/issues/22
     private static String requote(String regex) {
-        final Pattern patternRequoted = Pattern.compile("\\\\Q(.*?)\\\\E");
-        // http://stackoverflow.com/questions/399078/what-special-characters-must-be-escaped-in-regular-expressions
-        // adding "@" prevents StackOverflowError inside generex: https://github.com/mifmif/Generex/issues/21
-        final Pattern patternSpecial = Pattern.compile("[.^$*+?(){|\\[\\\\@]");
-        StringBuilder sb = new StringBuilder(regex);
-        Matcher matcher = patternRequoted.matcher(sb);
-        while (matcher.find()) {
-            sb.replace(matcher.start(), matcher.end(), patternSpecial.matcher(matcher.group(1)).replaceAll("\\\\$0"));
-            //matcher.reset();
+        Matcher matcher = PATTERN_QUOTED.matcher(regex);
+        if (!matcher.find()) {
+            return regex;
+        }
+        int lastStart = 0;
+        int length = regex.length();
+        StringBuilder sb = new StringBuilder(length);
+        do {
+            sb.append(regex, lastStart, matcher.start());
+            sb.append(PATTERN_SPECIALS.matcher(matcher.group(1)).replaceAll("\\\\$0"));
+            lastStart = matcher.end();
+        } while (lastStart < length && matcher.find());
+        if (lastStart < length) {
+            sb.append(regex, lastStart, length);
         }
         return sb.toString();
     }

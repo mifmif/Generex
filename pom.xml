@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.mifmif</groupId>
 	<artifactId>generex</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<name>Generex</name>
 	<url>https://github.com/mifmif/Generex/tree/master</url>
 	<description>Generex A Java Library for regex to Strings generation</description>
@@ -375,6 +375,14 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jdepend-maven-plugin</artifactId>
 				<version>2.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>5</source>
+					<target>5</target>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
