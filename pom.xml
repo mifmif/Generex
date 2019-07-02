@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.mifmif</groupId>
 	<artifactId>generex</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<name>Generex</name>
 	<url>https://github.com/mifmif/Generex/tree/master</url>
 	<description>Generex A Java Library for regex to Strings generation</description>
@@ -108,11 +108,12 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -175,6 +176,14 @@
 					<failOnError>false</failOnError>
 					<sourcepath>src/main/java</sourcepath>
 				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -194,7 +203,6 @@
 				</configuration>
 			</plugin>
 
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -208,24 +216,10 @@
 				</executions>
 			</plugin>
 
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.6</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -235,9 +229,7 @@
 						</goals>
 					</execution>
 				</executions>
-				 
 			</plugin>
-
 
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
@@ -305,30 +297,25 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.6</version>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.4</version>
 				<configuration>
-					<check>
-						<haltOnFailure>false</haltOnFailure>
-						<totalBranchRate>80</totalBranchRate>
-						<totalLineRate>80</totalLineRate>
-						<packageLineRate>80</packageLineRate>
-						<packageBranchRate>80</packageBranchRate>
-					</check>
-					<instrumentation>
-						<excludes>
-							<exclude>**/HelpMojo.class</exclude>
-						</excludes>
-					</instrumentation>
+					<excludes>
+						<exclude>**/HelpMojo.class</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>
-						<id>verification</id>
-						<phase>verify</phase>
 						<goals>
-							<goal>check</goal>
-							<goal>cobertura</goal>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -357,7 +344,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.3</version>
+				<version>3.0.5</version>
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<failOnError>true</failOnError>

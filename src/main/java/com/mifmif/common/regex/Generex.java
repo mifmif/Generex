@@ -125,10 +125,10 @@ public class Generex implements Iterable {
     }
 
     /**
-     * @param indexOrder ( 1<= indexOrder <=n)
+     * @param indexOrder ( 1 &le; indexOrder &le; n)
      * @return The matched string by the given pattern in the given it's order in the sorted list of matched String.<br>
      * <code>indexOrder</code> between 1 and <code>n</code> where <code>n</code> is the number of matched String.<br> If
-     * indexOrder >= n , return an empty string. if there is an infinite number of String that matches the given Regex,
+     * indexOrder &ge; n , return an empty string. if there is an infinite number of String that matches the given Regex,
      * the method throws {@code StackOverflowError}
      */
     public String getMatchedString(int indexOrder) {
@@ -311,7 +311,7 @@ public class Generex implements Iterable {
     }
 
     /**
-     * Generate and return a random String that match the pattern used in this Generex, and the string has a length >=
+     * Generate and return a random String that match the pattern used in this Generex, and the string has a length &ge;
      * <code>minLength</code>
      *
      * @param minLength
@@ -322,8 +322,8 @@ public class Generex implements Iterable {
     }
 
     /**
-     * Generate and return a random String that match the pattern used in this Generex, and the string has a length >=
-     * <code>minLength</code> and <= <code>maxLength</code>
+     * Generate and return a random String that match the pattern used in this Generex, and the string has a length &ge;
+     * <code>minLength</code> and &le; <code>maxLength</code>
      *
      * @param minLength
      * @param maxLength
@@ -402,6 +402,11 @@ public class Generex implements Iterable {
         return false;
     }
 
+    private static final Pattern PATTERN_QUOTED = Pattern.compile("\\\\Q(.*?)\\\\E", Pattern.DOTALL | Pattern.MULTILINE);
+    // http://stackoverflow.com/questions/399078/what-special-characters-must-be-escaped-in-regular-expressions
+    // adding "@" prevents StackOverflowError inside generex: https://github.com/mifmif/Generex/issues/21
+    // &"<#~ also need to be escaped due to special treatment in automaton
+    private static final Pattern PATTERN_SPECIALS = Pattern.compile("[.^$*+?(){}|\\[\\\\@&\"<#~]");
     /**
      * Requote a regular expression by escaping some parts of it from generation without need to escape each special
      * character one by one. <br> this is done by setting the part to be interpreted as normal characters (thus, quote
@@ -411,16 +416,22 @@ public class Generex implements Iterable {
      * @param regex
      * @return
      */
+    // https://github.com/mifmif/Generex/issues/22
     private static String requote(String regex) {
-        final Pattern patternRequoted = Pattern.compile("\\\\Q(.*?)\\\\E");
-        // http://stackoverflow.com/questions/399078/what-special-characters-must-be-escaped-in-regular-expressions
-        // adding "@" prevents StackOverflowError inside generex: https://github.com/mifmif/Generex/issues/21
-        final Pattern patternSpecial = Pattern.compile("[.^$*+?(){|\\[\\\\@]");
-        StringBuilder sb = new StringBuilder(regex);
-        Matcher matcher = patternRequoted.matcher(sb);
-        while (matcher.find()) {
-            sb.replace(matcher.start(), matcher.end(), patternSpecial.matcher(matcher.group(1)).replaceAll("\\\\$0"));
-            //matcher.reset();
+        Matcher matcher = PATTERN_QUOTED.matcher(regex);
+        if (!matcher.find()) {
+            return regex;
+        }
+        int lastStart = 0;
+        int length = regex.length();
+        StringBuilder sb = new StringBuilder(length);
+        do {
+            sb.append(regex, lastStart, matcher.start());
+            sb.append(PATTERN_SPECIALS.matcher(matcher.group(1)).replaceAll("\\\\$0"));
+            lastStart = matcher.end();
+        } while (lastStart < length && matcher.find());
+        if (lastStart < length) {
+            sb.append(regex, lastStart, length);
         }
         return sb.toString();
     }
