@@ -52,11 +52,15 @@ public class Generex implements Iterable {
      * <p>
      * An immutable map containing as keys the character classes and values the equivalent regular expression syntax.
      *
-     * @see #createRegExp(String)
+     * @see #createRegExp(String, int)
      */
     private static final Map<String, String> PREDEFINED_CHARACTER_CLASSES;
-    private RegExp regExp;
-    private Automaton automaton;
+    /**
+     * Uses {@link RegExp#ALL}
+     */
+    public static final int DEFAULT_FLAGS = RegExp.ALL;
+    protected RegExp regExp;
+    protected final Automaton automaton;
     private List<String> matchedStrings = new ArrayList<String>();
     private Node rootNode;
     private boolean isTransactionNodeBuilt;
@@ -72,23 +76,40 @@ public class Generex implements Iterable {
         PREDEFINED_CHARACTER_CLASSES = Collections.unmodifiableMap(characterClasses);
     }
 
-    public Generex(String regex) {
-        this(regex, new Random());
-    }
-
     public Generex(Automaton automaton) {
         this(automaton, new Random());
     }
 
-    public Generex(String regex, Random random) {
-        regex = requote(regex);
-        regExp = createRegExp(regex);
-        automaton = regExp.toAutomaton();
+    public Generex(Automaton automaton, Random random) {
+        this.automaton = automaton;
         this.random = random;
     }
 
-    public Generex(Automaton automaton, Random random) {
-        this.automaton = automaton;
+    public Generex(String regex) {
+        this(regex, new Random());
+    }
+
+    /**
+     * Uses {@link #DEFAULT_FLAGS}
+     */
+    public Generex(String regex, Random random) {
+        this(regex, random, DEFAULT_FLAGS);
+    }
+
+    /**
+     * @param flags syntax flags as in {@link RegExp#RegExp(String, int)}
+     */
+    public Generex(String regex, int flags) {
+        this(regex, new Random(), flags);
+    }
+
+    /**
+     * @param flags syntax flags as in {@link RegExp#RegExp(String, int)}
+     */
+    public Generex(String regex, Random random, int flags) {
+        regex = requote(regex);
+        regExp = createRegExp(regex, flags);
+        automaton = regExp.toAutomaton();
         this.random = random;
     }
 
@@ -98,19 +119,20 @@ public class Generex implements Iterable {
      * Predefined character classes are replaced with equivalent regular expression syntax prior creating the instance.
      *
      * @param regex the regular expression used to build the {@code RegExp} instance
+     * @param flags syntax flags as in {@link RegExp#RegExp(String, int)}
      * @return a {@code RegExp} instance for the given regular expression
      * @throws NullPointerException if the given regular expression is {@code null}
      * @throws IllegalArgumentException if an error occurred while parsing the given regular expression
      * @throws StackOverflowError if the regular expression has to many transitions
      * @see #PREDEFINED_CHARACTER_CLASSES
-     * @see #isValidPattern(String)
+     * @see #isValidPattern(String, int)
      */
-    private static RegExp createRegExp(String regex) {
+    protected static RegExp createRegExp(String regex, int flags) {
         String finalRegex = regex;
         for (Entry<String, String> charClass : PREDEFINED_CHARACTER_CLASSES.entrySet()) {
             finalRegex = finalRegex.replaceAll(charClass.getKey(), charClass.getValue());
         }
-        return new RegExp(finalRegex);
+        return new RegExp(finalRegex, flags);
     }
 
     /**
@@ -389,17 +411,26 @@ public class Generex implements Iterable {
      * Tells whether or not the given regular expression is a valid pattern (for {@code Generex}).
      *
      * @param regex the regular expression that will be validated
+     * @param flags syntax flags as in {@link RegExp#RegExp(String, int)}
      * @return {@code true} if the regular expression is valid, {@code false} otherwise
      * @throws NullPointerException if the given regular expression is {@code null}
      */
-    public static boolean isValidPattern(String regex) {
+    public static boolean isValidPattern(String regex, int flags) {
         try {
-            createRegExp(regex);
+            createRegExp(regex, flags);
             return true;
         } catch (IllegalArgumentException ignore) { // NOPMD - Not valid.
         } catch (StackOverflowError ignore) { // NOPMD - Possibly valid but stack not big enough to handle it.
         }
         return false;
+    }
+
+    /**
+     * Uses {@link #DEFAULT_FLAGS}
+     * @see #isValidPattern(String, int)
+     */
+    public static boolean isValidPattern(String regex) {
+        return isValidPattern(regex, DEFAULT_FLAGS);
     }
 
     /**
@@ -411,7 +442,7 @@ public class Generex implements Iterable {
      * @param regex
      * @return
      */
-    private static String requote(String regex) {
+    protected static String requote(String regex) {
         final Pattern patternRequoted = Pattern.compile("\\\\Q(.*?)\\\\E");
         // http://stackoverflow.com/questions/399078/what-special-characters-must-be-escaped-in-regular-expressions
         // adding "@" prevents StackOverflowError inside generex: https://github.com/mifmif/Generex/issues/21
