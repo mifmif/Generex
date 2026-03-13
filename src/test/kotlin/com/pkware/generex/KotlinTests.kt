@@ -188,6 +188,46 @@ class KotlinTests {
         assertThat(generated.length).isEqualTo(targetLength)
     }
 
+    @ParameterizedTest
+    @MethodSource("infiniteRegexArgs")
+    fun `infinite regex does not hang`(regex: String) {
+        val generex = Generex(regex)
+        repeat(10) {
+            val result = generex.random()
+            assertThat(result).matches(regex)
+        }
+    }
+
+    @Test
+    fun `anchors are stripped from regex`() {
+        val regex = "^[A-Za-z]+$"
+        val generex = Generex(regex)
+        repeat(100) {
+            val result = generex.random()
+            assertThat(result).matches(regex)
+            assertThat(result).doesNotContain("^")
+            assertThat(result).doesNotContain("$")
+        }
+    }
+
+    @Test
+    fun `non-capturing groups are converted to plain groups`() {
+        val regex = "(?:abc)+"
+        val generex = Generex(regex)
+        repeat(100) {
+            val result = generex.random()
+            assertThat(result).matches(regex)
+        }
+    }
+
+    @Test
+    fun `escaped dollar sign at end is not stripped`() {
+        val regex = "abc\\$"
+        val generex = Generex(regex)
+        val result = generex.random()
+        assertThat(result).isEqualTo("abc$")
+    }
+
     companion object {
 
         @JvmStatic
@@ -232,6 +272,15 @@ class KotlinTests {
         fun rangeUniformDistributionArgs() = Stream.of(
             Arguments.of("\\d{1,5}"),
             Arguments.of("\\d{1,10}"),
+        )
+
+        @JvmStatic
+        fun infiniteRegexArgs() = Stream.of(
+            Arguments.of("^[A-Za-z]+(?:[ '-][A-Za-z]+)*$"),
+            Arguments.of("[A-Za-z]+([ '-][A-Za-z]+)*"),
+            Arguments.of("(\\d{1,3}\\.){3}\\d{1,3}"),
+            Arguments.of("[A-Z][a-z]*( [A-Z][a-z]*)*"),
+            Arguments.of("(ab|cd)+(ef|gh)*"),
         )
 
         @JvmStatic

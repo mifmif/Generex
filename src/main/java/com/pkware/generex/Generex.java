@@ -119,6 +119,18 @@ public class Generex implements Iterable<String> {
      */
     private static RegExp createRegExp(String regex) {
         String finalRegex = regex;
+
+        // Strip anchors as brics library treats ^ and $ as literal characters.
+        if (finalRegex.startsWith("^")) {
+            finalRegex = finalRegex.substring(1);
+        }
+        if (finalRegex.endsWith("$") && !finalRegex.endsWith("\\$")) {
+            finalRegex = finalRegex.substring(0, finalRegex.length() - 1);
+        }
+
+        // Convert non-capturing groups (?:...) to plain groups (...) as brics library doesn't support them.
+        finalRegex = finalRegex.replace("(?:", "(");
+
         for (Entry<String, String> charClass : PREDEFINED_CHARACTER_CLASSES.entrySet()) {
             finalRegex = finalRegex.replaceAll(charClass.getKey(), charClass.getValue());
         }
@@ -379,10 +391,24 @@ public class Generex implements Iterable<String> {
      * @param maxLength    Maximum wanted length of produced string.
      * @return A string built from the accumulation of previous transitions.
      */
+    /**
+     * Maximum number of recursive calls allowed during random generation for infinite regexes.
+     * Prevents exponential backtracking when the automaton has cycles with many transitions.
+     */
+    private static final int MAX_RANDOM_ATTEMPTS = 1000;
+
     private String prepareRandom(String currentMatch, State state, int minLength, int maxLength, int targetLength) {
+        return prepareRandom(currentMatch, state, minLength, maxLength, targetLength, isInfinite() ? new int[]{0} : null);
+    }
+
+    private String prepareRandom(String currentMatch, State state, int minLength, int maxLength, int targetLength, int[] attempts) {
 
         // Return a string of length 'maxLength + 1' to indicate a dead branch.
         if (currentMatch.length() > maxLength || state.getTransitions().isEmpty()) return currentMatch;
+
+        // For infinite regexes, the automaton has cycles that can cause exponential recursion.
+        // This budget limit caps total recursive iterations to prevent hanging.
+        if (attempts != null && attempts[0] >= MAX_RANDOM_ATTEMPTS) return currentMatch;
 
         String returnValue = null;
 
@@ -400,6 +426,10 @@ public class Generex implements Iterable<String> {
 
         // Will never start as empty due to the initial if statement in the function.
         while (!possibleTransitions.isEmpty()) {
+            if (attempts != null) {
+                attempts[0]++;
+                if (attempts[0] >= MAX_RANDOM_ATTEMPTS) break;
+            }
 
             Transition randomTransition = pickRandomWeightedTransition(possibleTransitions, totalWeightedTransitions);
             int subTransitions = getWeightedTransitions(randomTransition);
@@ -407,7 +437,7 @@ public class Generex implements Iterable<String> {
             possibleTransitions.remove(randomTransition);
 
             char randomChar = (char) (random.nextInt(subTransitions) + randomTransition.getMin());
-            String result = prepareRandom(currentMatch + randomChar, randomTransition.getDest(), minLength, maxLength, targetLength);
+            String result = prepareRandom(currentMatch + randomChar, randomTransition.getDest(), minLength, maxLength, targetLength, attempts);
 
             // Greedily return the first valid result found that is of the wanted length..
             if (result.length() == targetLength) return result;
@@ -415,7 +445,9 @@ public class Generex implements Iterable<String> {
             returnValue = getBestMatch(result, returnValue, minLength, maxLength, targetLength);
         }
 
-        return returnValue;
+        // For infinite regexes, if budget was exhausted before reaching an accept state, return currentMatch
+        // as a fallback instead of null.
+        return returnValue != null ? returnValue : currentMatch;
     }
 
     /**
